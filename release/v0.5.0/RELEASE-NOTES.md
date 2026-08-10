@@ -8,6 +8,7 @@ workflows for classmate testing.
 ## Added
 
 - Refined monochrome UI with bundled Poppins typography.
+- Rebuilt expanded surface hierarchy with Nutch branding and a separated tool rail.
 - Planner tags, estimated duration, and lightweight subtasks.
 - Search category filters for Commands, Notes, and Tasks.
 - Context activity stack, pinned activities, multiple labeled timers, Today
