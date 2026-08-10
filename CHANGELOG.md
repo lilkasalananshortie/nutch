@@ -19,6 +19,7 @@ All notable changes to Nutch are documented here.
 - Compact Today view for current Focus, active timers, and the next Planner item.
 - Local profile selector for Default, Work, Study, Gaming, and Presentation policies.
 - Quick Search aliases/prefix normalization and safe Privacy/DND/history actions.
+- Today now includes a local task-count briefing summary.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.
