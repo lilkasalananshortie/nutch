@@ -32,6 +32,7 @@ All notable changes to Nutch are documented here.
 ### Changed
 
 - Expanded the monochrome UI system while preserving the compact context/clock/status collapsed layout.
+- Refined the visual system with bundled Poppins typography, calmer surfaces, stronger focus states, and a monochrome Notes treatment.
 - Documented the advanced-feature implementation boundary and deferred integrations.
 
 ### Fixed

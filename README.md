@@ -5,6 +5,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 ## Current capabilities
 
 - Premium monochrome design tokens and consistent vector icon treatment
+- Bundled Poppins typography with refined spacing, surfaces, focus states, and controls
 - Responsive collapsed geometry with `context | clock | status` hierarchy
 - Compact media context with artwork thumbnail, ellipsis, micro-progress, and reduced-motion equalizer
 - Contextual expanded height so empty media does not create a giant blank panel
