@@ -32,6 +32,17 @@ in this release and no API secret is stored in settings or frontend code.
 Diagnostics intentionally omit Notes, Planner text, clipboard data, and
 credentials.
 
+Enable Settings → Privacy mode to mask media and temporary activity titles on
+the collapsed surface. Notification history is automatically limited to
+recent, meaningful entries.
+
+## Backups
+
+Settings → Data can export a versioned JSON backup containing Settings, Notes,
+and Planner items. Restore validates the schema before replacing those three
+local files. Backups are never uploaded and do not contain API keys or secure
+credentials.
+
 ## Recovery
 
 Use Settings → Run setup again to revisit onboarding. Settings → About &
