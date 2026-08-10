@@ -2,7 +2,7 @@ import { useEffect, useRef } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { native } from "../lib/native";
 
-export type NotchView = "main" | "settings" | "notes" | "notifications" | "planner" | "search" | "focus";
+export type NotchView = "main" | "settings" | "notes" | "notifications" | "planner" | "search" | "focus" | "onboarding" | "diagnostics";
 
 const COLLAPSED_IDLE = { width: 220, height: 52 };
 const SETTINGS = { width: 440, height: 600 };
@@ -11,6 +11,8 @@ const NOTIFICATIONS = { width: 420, height: 480 };
 const PLANNER = { width: 440, height: 560 };
 const SEARCH = { width: 440, height: 500 };
 const FOCUS = { width: 420, height: 420 };
+const ONBOARDING = { width: 420, height: 460 };
+const DIAGNOSTICS = { width: 440, height: 620 };
 
 export function useNotchGeometry(expanded: boolean, view: NotchView, topOffset: number, monitorId: string, displayStyle: "notch" | "island", collapsedWidth: number, showMedia: boolean, showSystemStats: boolean) {
   const current = useRef(COLLAPSED_IDLE);
@@ -18,7 +20,7 @@ export function useNotchGeometry(expanded: boolean, view: NotchView, topOffset: 
 
   useEffect(() => {
     const expandedHeight = 220 + (showMedia ? 120 : 0) + (showSystemStats ? 82 : 0);
-    const target = !expanded ? { width: collapsedWidth, height: 52 } : view === "settings" ? SETTINGS : view === "notes" ? NOTES : view === "notifications" ? NOTIFICATIONS : view === "planner" ? PLANNER : view === "search" ? SEARCH : view === "focus" ? FOCUS : { width: 420, height: expandedHeight };
+    const target = !expanded ? { width: collapsedWidth, height: 52 } : view === "settings" ? SETTINGS : view === "notes" ? NOTES : view === "notifications" ? NOTIFICATIONS : view === "planner" ? PLANNER : view === "search" ? SEARCH : view === "focus" ? FOCUS : view === "onboarding" ? ONBOARDING : view === "diagnostics" ? DIAGNOSTICS : { width: 420, height: expandedHeight };
     const start = current.current;
     const startedAt = performance.now();
     const myGeneration = ++generation.current;

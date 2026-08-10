@@ -343,3 +343,38 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 
 @keyframes equalizer { from { transform: scaleY(.55); opacity: .55; } to { transform: scaleY(1); opacity: 1; } }
 @media (prefers-reduced-motion: reduce) { .equalizer i { animation: none; } }
+
+.onboarding-panel { min-height: 420px; display: flex; flex-direction: column; justify-content: center; gap: 14px; padding: 28px; text-align: center; background: var(--nutch-bg); }
+.onboarding-panel h1 { margin: 0; font-size: 21px; letter-spacing: -.02em; }
+.onboarding-panel p { margin: 0 auto 8px; max-width: 300px; color: var(--nutch-text-secondary); line-height: 1.5; }
+.onboarding-mark { align-self: center; display: grid; place-items: center; width: 48px; height: 48px; border: 1px solid var(--nutch-border); border-radius: 16px; color: var(--nutch-text-primary); font-size: 22px; font-weight: 700; }
+.onboarding-progress { height: 2px; margin-bottom: 8px; overflow: hidden; border-radius: 999px; background: var(--nutch-surface-hover); }
+.onboarding-progress i { display: block; height: 100%; border-radius: inherit; background: var(--nutch-text-primary); transition: width var(--motion-normal) var(--ease-standard); }
+.onboarding-options { display: grid; gap: 8px; text-align: left; }
+.onboarding-options button { display: flex; flex-direction: column; gap: 4px; padding: 13px 15px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); color: var(--nutch-text-primary); background: var(--nutch-surface); text-align: left; cursor: pointer; }
+.onboarding-options button:hover, .onboarding-options button.selected { border-color: rgba(255,255,255,.34); background: var(--nutch-surface-hover); }
+.onboarding-options small { color: var(--nutch-text-secondary); }
+.onboarding-summary { display: grid; grid-template-columns: 1fr auto; gap: 9px 14px; padding: 14px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); background: var(--nutch-surface); text-align: left; }
+.onboarding-summary span { color: var(--nutch-text-secondary); }
+.onboarding-summary b { color: var(--nutch-text-primary); font-size: 12px; font-weight: 500; }
+.primary-button, .secondary-button, .quiet-button { min-height: 34px; border-radius: 10px; cursor: pointer; font: inherit; }
+.primary-button { border: 1px solid var(--nutch-text-primary); color: #050505; background: var(--nutch-text-primary); font-weight: 600; }
+.primary-button:hover { background: #d7d7d7; }
+.primary-button:disabled { cursor: wait; opacity: .6; }
+.secondary-button { width: 100%; border: 1px solid var(--nutch-border); color: var(--nutch-text-primary); background: var(--nutch-surface); }
+.secondary-button:hover { background: var(--nutch-surface-hover); }
+.quiet-button { align-self: center; border: 0; color: var(--nutch-text-secondary); background: transparent; }
+.quiet-button:hover { color: var(--nutch-text-primary); }
+@media (prefers-reduced-motion: reduce) { .onboarding-progress i { transition: none; } }
+.diagnostics-panel { min-height: 580px; padding: 20px; background: var(--nutch-bg); }
+.about-block { display: grid; gap: 7px; margin: 14px 0; padding: 15px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); background: var(--nutch-surface); }
+.about-block strong { font-size: 20px; }
+.about-block span { color: var(--nutch-text-secondary); font-size: 12px; }
+.about-block button { width: fit-content; border: 0; padding: 0; color: var(--nutch-text-secondary); background: transparent; cursor: pointer; font: inherit; font-size: 12px; text-align: left; }
+.about-block button:hover { color: var(--nutch-text-primary); }
+.diagnostics-list { display: grid; overflow: hidden; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); background: var(--nutch-surface); }
+.diagnostic-row { display: flex; justify-content: space-between; gap: 12px; padding: 12px 14px; border-bottom: 1px solid var(--nutch-border); font-size: 12px; }
+.diagnostic-row:last-child { border-bottom: 0; }
+.diagnostic-row span { color: var(--nutch-text-secondary); }
+.diagnostic-row b { color: var(--nutch-text-primary); font-weight: 500; text-align: right; }
+.diagnostic-row b.muted { color: var(--nutch-text-muted); }

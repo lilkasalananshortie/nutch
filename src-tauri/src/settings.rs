@@ -1,5 +1,9 @@
 use serde::{Deserialize, Serialize};
-use std::{fs, path::PathBuf};
+use std::{
+    fs,
+    path::PathBuf,
+    time::{SystemTime, UNIX_EPOCH},
+};
 use tauri::{AppHandle, Manager};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -20,6 +24,7 @@ pub struct AppSettings {
     do_not_disturb: bool,
     presentation_mode: bool,
     fullscreen_behavior: String,
+    onboarding_completed: bool,
 }
 
 impl Default for AppSettings {
@@ -40,6 +45,7 @@ impl Default for AppSettings {
             do_not_disturb: false,
             presentation_mode: false,
             fullscreen_behavior: "show".into(),
+            onboarding_completed: false,
         }
     }
 }
@@ -56,10 +62,32 @@ pub fn load_settings(app: AppHandle) -> AppSettings {
     let Ok(path) = settings_path(&app) else {
         return AppSettings::default();
     };
-    let Ok(contents) = fs::read_to_string(path) else {
+    let Ok(contents) = fs::read_to_string(&path) else {
         return AppSettings::default();
     };
-    serde_json::from_str(&contents).unwrap_or_default()
+    match serde_json::from_str::<AppSettings>(&contents) {
+        Ok(mut settings) => {
+            // Existing Nutch installs predate onboarding. Treat a valid legacy
+            // settings file as already configured so upgrades never interrupt use.
+            if serde_json::from_str::<serde_json::Value>(&contents)
+                .ok()
+                .and_then(|value| value.get("onboardingCompleted").cloned())
+                .is_none()
+            {
+                settings.onboarding_completed = true;
+            }
+            settings
+        }
+        Err(_) => {
+            let stamp = SystemTime::now()
+                .duration_since(UNIX_EPOCH)
+                .map(|value| value.as_secs())
+                .unwrap_or_default();
+            let backup = path.with_file_name(format!("settings.json.corrupt-{stamp}"));
+            let _ = fs::rename(&path, backup);
+            AppSettings::default()
+        }
+    }
 }
 
 #[tauri::command]

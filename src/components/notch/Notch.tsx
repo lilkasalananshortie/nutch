@@ -16,8 +16,15 @@ import { PlannerPanel } from "../PlannerPanel";
 import { QuickNotesPanel } from "../QuickNotesPanel";
 import { SearchPanel } from "../SearchPanel";
 import { SettingsPanel } from "../SettingsPanel";
+import { Onboarding } from "../Onboarding";
+import { DiagnosticsPanel } from "../DiagnosticsPanel";
 import { CollapsedNotch } from "./CollapsedNotch";
 import { ExpandedNotch } from "./ExpandedNotch";
+
+const REMINDER_STATE_KEY = "nutch.reminder-state.v1";
+function loadReminderState(): Record<string, number> {
+  try { return JSON.parse(localStorage.getItem(REMINDER_STATE_KEY) ?? "{}") as Record<string, number>; } catch { return {}; }
+}
 
 export function Notch() {
   const { settings, ready } = useSettings();
@@ -31,7 +38,11 @@ export function Notch() {
   const [view, setView] = useState<NotchView>("main");
   const collapseTimer = useRef(0);
   const lowBatteryAlerted = useRef(false);
-  const reminded = useRef(new Set<string>());
+  const reminded = useRef<Record<string, number>>(loadReminderState());
+
+  useEffect(() => {
+    if (ready && !settings.onboardingCompleted) { setView("onboarding"); setExpanded(true); }
+  }, [ready, settings.onboardingCompleted]);
 
   const collapsedWidth = media.media?.available ? 344 : battery?.available || unreadCount > 0 || activity ? 248 : 220;
   useNotchGeometry(expanded, view, settings.topOffset, settings.monitorId, settings.displayStyle, collapsedWidth, settings.showMedia && (media.media?.available || media.error), settings.showSystemStats);
@@ -62,14 +73,21 @@ export function Notch() {
   useEffect(() => {
     const checkReminders = () => {
       const now = Date.now();
+      let shown = 0;
       for (const item of planner.items) {
-        if (!item.completed && item.reminderAt && item.reminderAt <= now && item.reminderAt > now - 90_000 && !reminded.current.has(item.id)) {
-          reminded.current.add(item.id);
-          const body = item.scheduledAt ? `Due ${new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(item.scheduledAt)}.` : "Reminder is due now.";
-          addNotification(item.title, body);
-          push({ id: `reminder-${item.id}`, kind: "reminder", title: item.title, detail: "Planner reminder", priority: 90, expiresAt: now + 8_000 });
-        }
+        if (shown >= 3 || item.completed || !item.reminderAt || item.reminderAt > now || reminded.current[item.id] === item.reminderAt) continue;
+        // Recover reminders missed while Nutch was closed or Windows was asleep,
+        // but avoid surfacing stale items from an old planning horizon.
+        if (now - item.reminderAt > 7 * 24 * 60 * 60_000) { reminded.current[item.id] = item.reminderAt; continue; }
+        const missed = now - item.reminderAt > 90_000;
+        const scheduled = item.scheduledAt ? new Intl.DateTimeFormat(undefined, { hour: "numeric", minute: "2-digit" }).format(item.scheduledAt) : null;
+        const body = missed ? `Missed reminder${scheduled ? ` from ${scheduled}` : ""}.` : scheduled ? `Due ${scheduled}.` : "Reminder is due now.";
+        addNotification(item.title, body);
+        push({ id: `reminder-${item.id}`, kind: "reminder", title: item.title, detail: missed ? "Missed planner reminder" : "Planner reminder", priority: 90, expiresAt: now + 8_000 });
+        reminded.current[item.id] = item.reminderAt;
+        shown += 1;
       }
+      try { localStorage.setItem(REMINDER_STATE_KEY, JSON.stringify(reminded.current)); } catch { /* Recovery state is best-effort. */ }
     };
     checkReminders();
     const timer = window.setInterval(checkReminders, 30_000);
@@ -104,7 +122,9 @@ export function Notch() {
   return <main className={`notch-shell ${expanded ? "expanded" : "collapsed"} view-${view} display-${settings.displayStyle} ${ready ? "ready" : ""}`} onMouseEnter={() => { cancelCollapse(); handleEnter(); }} onMouseLeave={() => { if (view === "main") collapseSoon(); }} onClick={handleClick} onWheel={onWheel} aria-label="Nutch system controls">
     {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} />}
     {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} />}
-    {expanded && view === "settings" && <SettingsPanel onBack={() => setView("main")} />}
+    {expanded && view === "settings" && <SettingsPanel onBack={() => setView("main")} onSetup={() => openView("onboarding")} onDiagnostics={() => openView("diagnostics")} />}
+    {expanded && view === "onboarding" && <Onboarding onComplete={() => { setView("main"); setExpanded(false); }} />}
+    {expanded && view === "diagnostics" && <DiagnosticsPanel onBack={() => setView("settings")} />}
     {expanded && view === "notes" && <QuickNotesPanel onBack={() => setView("main")} />}
     {expanded && view === "notifications" && <NotificationPanel onBack={() => setView("main")} />}
     {expanded && view === "planner" && <PlannerPanel onBack={() => setView("main")} />}

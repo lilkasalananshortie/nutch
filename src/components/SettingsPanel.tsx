@@ -8,7 +8,7 @@ function Toggle({ checked, onChange, label }: { checked: boolean; onChange: (che
   return <button type="button" role="switch" aria-label={label} aria-checked={checked} className={`toggle ${checked ? "on" : ""}`} onClick={() => onChange(!checked)}><span /></button>;
 }
 
-export function SettingsPanel({ onBack }: { onBack: () => void }) {
+export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () => void; onSetup: () => void; onDiagnostics: () => void }) {
   const { settings, update, error } = useSettings();
   const { addNotification } = useNotifications();
   const interactionWarning = !settings.hoverToExpand || !settings.clickToExpand;
@@ -67,6 +67,8 @@ export function SettingsPanel({ onBack }: { onBack: () => void }) {
       {interactionWarning && <p className="settings-note">At least one expand method stays enabled so settings remain reachable.</p>}
       {error && <p className="inline-error">{error}</p>}
       {notificationMessage && <p className="settings-note">{notificationMessage}</p>}
+      <button className="secondary-button" onClick={onSetup}>Run setup again</button>
+      <button className="secondary-button" onClick={onDiagnostics}>About & diagnostics</button>
       <button className="quit-button" onClick={() => void native.quit()}>Quit Nutch</button>
     </div>
   );

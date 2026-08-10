@@ -77,6 +77,7 @@ export interface AppSettings {
   doNotDisturb: boolean;
   presentationMode: boolean;
   fullscreenBehavior: "show" | "minimal" | "hide";
+  onboardingCompleted: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -95,6 +96,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   doNotDisturb: false,
   presentationMode: false,
   fullscreenBehavior: "show",
+  onboardingCompleted: false,
 };
 
 export const native = {
