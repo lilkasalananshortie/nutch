@@ -20,6 +20,7 @@ All notable changes to Nutch are documented here.
 - Local profile selector for Default, Work, Study, Gaming, and Presentation policies.
 - Quick Search aliases/prefix normalization and safe Privacy/DND/history actions.
 - Today now includes a local task-count briefing summary.
+- Refined expanded shell structure with a Nutch brand lockup, grouped status header, and separated tool rail.
 
 ## [0.5.0-beta] - 2026-08-11
 

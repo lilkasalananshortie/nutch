@@ -36,7 +36,7 @@ export function ExpandedNotch({ format, battery, media, mediaError, unreadCount,
   const system = useSystemStats(settings.showSystemStats);
   return <div className="expanded-content island-layout">
     <div className="island-main">
-      <header className="system-header"><Clock format={format} expanded /><BatteryStatus battery={battery} expanded /></header>
+      <header className="system-header"><div className="brand-lockup"><span className="brand-mark">N</span><div><strong>Nutch</strong><small>Control surface</small></div></div><div className="header-status"><Clock format={format} expanded /><BatteryStatus battery={battery} expanded /></div></header>
       {activities.length > 1 && activity && <div className="activity-stack"><button onClick={cycle} aria-label="Cycle active activities"><span>{activities.length} active</span><strong>{activity.title}</strong></button><button onClick={() => togglePinned(activity.id)} aria-label={activity.pinned ? "Unpin activity" : "Pin activity"}>{activity.pinned ? "Pinned" : "Pin"}</button></div>}
       <VolumeControl status={volume.status} error={volume.error} onVolume={(value) => void volume.setVolume(value)} onMute={() => void volume.toggleMute()} dragging={volume.dragging} />
       {settings.showMedia && (media?.available || mediaError) && <MediaControl media={media} error={mediaError} onControl={onMediaControl} />}
@@ -50,6 +50,7 @@ export function ExpandedNotch({ format, battery, media, mediaError, unreadCount,
       <button className="rail-button" onClick={onTimer} aria-label="Open Timer" title="Timer"><Icon name="timer" size="small" /></button>
       <button className="rail-button" onClick={onCapture} aria-label="Quick Capture" title="Quick Capture"><Icon name="plus" size="small" /></button>
       <button className="rail-button" onClick={onToday} aria-label="Open Today" title="Today"><Icon name="planner" size="small" /></button>
+      <span className="rail-divider" aria-hidden="true" />
       <button className="rail-button" onClick={onNotifications} aria-label="Open Notifications" title="Alerts"><Icon name="notifications" size="small" />{unreadCount > 0 && <b>{Math.min(unreadCount, 9)}</b>}</button>
       <button className="rail-button" onClick={onSettings} aria-label="Open Settings" title="Settings"><Icon name="settings" size="small" /></button>
     </aside>
