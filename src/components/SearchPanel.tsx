@@ -8,6 +8,7 @@ import { useTimer } from "../stores/timer";
 import { Icon } from "./ui/Icon";
 
 type SearchResult = { id: string; title: string; detail: string; action: () => void | Promise<void> };
+type SearchCategory = "all" | "commands" | "notes" | "tasks";
 const HISTORY_KEY = "nutch.command-history.v1";
 function loadHistory() { try { const value = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as unknown; return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").slice(0, 20) : []; } catch { return []; } }
 function fuzzyScore(text: string, query: string) {
@@ -87,11 +88,13 @@ function convert(value: number, from: Unit, to: Unit): number | null {
 function formatNumber(value: number) {
   return Number.isInteger(value) ? String(value) : value.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
+function categoryFor(result: SearchResult): SearchCategory { if (result.detail === "Note") return "notes"; if (result.detail === "Planner") return "tasks"; return "commands"; }
 
 export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, onTimer, onCapture }: { onBack: () => void; onNotes: () => void; onPlanner: () => void; onSettings: () => void; onFocus: () => void; onTimer: () => void; onCapture: () => void }) {
   const [query, setQuery] = useState("");
   const [history, setHistory] = useState(loadHistory);
   const [historyIndex, setHistoryIndex] = useState(-1);
+  const [category, setCategory] = useState<SearchCategory>("all");
   const { notes } = useQuickNotes();
   const { items } = usePlanner();
   const { start } = useFocus();
@@ -138,7 +141,8 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
     const plannerResults = items.map((item) => ({ item, score: fuzzyScore(`${item.title} ${item.description}`, term) })).filter(({ score }) => score >= 0).sort((a, b) => b.score - a.score).map(({ item }) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
     return [...commandResults, ...noteResults, ...plannerResults];
   }, [items, notes, onBack, onCapture, onFocus, onNotes, onPlanner, onSettings, onTimer, query, settings.doNotDisturb, settings.privacyMode, start, startTimer, update]);
+  const visibleResults = useMemo(() => category === "all" ? results : results.filter((result) => categoryFor(result) === category), [category, results]);
 
   const execute = (action: () => void | Promise<void>) => { const value = query.trim(); if (value) { const next = [value, ...history.filter((item) => item !== value)].slice(0, 20); setHistory(next); try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* History is optional. */ } } void action(); };
-  return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => { setQuery(event.target.value); setHistoryIndex(-1); }} onKeyDown={(event) => { if (event.key === "ArrowUp" && history.length) { event.preventDefault(); const next = Math.min(historyIndex + 1, history.length - 1); setHistoryIndex(next); setQuery(history[next]); } else if (event.key === "ArrowDown" && historyIndex >= 0) { event.preventDefault(); const next = historyIndex - 1; setHistoryIndex(next); setQuery(next < 0 ? "" : history[next]); } }} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-results">{query && results.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{!query && history.length > 0 && <p className="search-history-label">Recent commands</p>}{!query && history.slice(0, 5).map((item) => <button className="search-result history-result" key={item} onClick={() => setQuery(item)}><span>Recent</span><strong>{item}</strong></button>)}{results.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => execute(result.action)}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
+  return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => { setQuery(event.target.value); setHistoryIndex(-1); }} onKeyDown={(event) => { if (event.key === "ArrowUp" && history.length) { event.preventDefault(); const next = Math.min(historyIndex + 1, history.length - 1); setHistoryIndex(next); setQuery(history[next]); } else if (event.key === "ArrowDown" && historyIndex >= 0) { event.preventDefault(); const next = historyIndex - 1; setHistoryIndex(next); setQuery(next < 0 ? "" : history[next]); } }} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-categories" role="tablist" aria-label="Search categories">{(["all", "commands", "notes", "tasks"] as SearchCategory[]).map((value) => <button key={value} className={category === value ? "selected" : ""} role="tab" aria-selected={category === value} onClick={() => setCategory(value)}>{value[0].toUpperCase() + value.slice(1)}</button>)}</div><div className="search-results">{query && visibleResults.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{!query && history.length > 0 && <p className="search-history-label">Recent commands</p>}{!query && history.slice(0, 5).map((item) => <button className="search-result history-result" key={item} onClick={() => setQuery(item)}><span>Recent</span><strong>{item}</strong></button>)}{visibleResults.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => execute(result.action)}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
 }

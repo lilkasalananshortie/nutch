@@ -30,6 +30,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 - Compact Today view for current Focus, active timers, and the next Planner item
 - Local profiles: Default, Work, Study, Gaming, and Presentation policies
 - Planner metadata: tags, estimated duration, and lightweight subtasks
+- Search category filters for Commands, Notes, and Tasks
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences

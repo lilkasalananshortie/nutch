@@ -21,6 +21,7 @@ All notable changes to Nutch are documented here.
 - Quick Search aliases/prefix normalization and safe Privacy/DND/history actions.
 - Today now includes a local task-count briefing summary.
 - Planner tasks now support tags, estimated duration, and lightweight subtasks while preserving older task data.
+- Quick Search now includes local category filters for commands, notes, and tasks.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.
