@@ -404,3 +404,5 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 .capture-segmented button.selected { color: var(--nutch-text-primary); background: var(--nutch-surface-hover); }
 .capture-due { display: grid; gap: 6px; color: var(--nutch-text-secondary); font-size: 12px; }
 .capture-due input { border: 1px solid var(--nutch-border); border-radius: 8px; padding: 8px; color: var(--nutch-text-primary); background: var(--nutch-surface); }
+.search-history-label { margin: 8px 12px 4px; color: var(--nutch-text-muted); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; }
+.history-result strong { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: 12px; }

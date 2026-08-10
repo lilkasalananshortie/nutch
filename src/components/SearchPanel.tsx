@@ -8,6 +8,15 @@ import { useTimer } from "../stores/timer";
 import { Icon } from "./ui/Icon";
 
 type SearchResult = { id: string; title: string; detail: string; action: () => void | Promise<void> };
+const HISTORY_KEY = "nutch.command-history.v1";
+function loadHistory() { try { const value = JSON.parse(localStorage.getItem(HISTORY_KEY) ?? "[]") as unknown; return Array.isArray(value) ? value.filter((item): item is string => typeof item === "string").slice(0, 20) : []; } catch { return []; } }
+function fuzzyScore(text: string, query: string) {
+  const source = text.toLowerCase();
+  if (source.includes(query)) return 100 + (source.startsWith(query) ? 30 : 0) - source.length / 100;
+  let cursor = 0; let score = 0;
+  for (const character of query) { const found = source.indexOf(character, cursor); if (found < 0) return -1; score += found === cursor ? 4 : 1; cursor = found + 1; }
+  return score;
+}
 
 function parseMath(expression: string): number | null {
   const source = expression.replace(/\s+/g, "");
@@ -81,6 +90,8 @@ function formatNumber(value: number) {
 
 export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, onTimer, onCapture }: { onBack: () => void; onNotes: () => void; onPlanner: () => void; onSettings: () => void; onFocus: () => void; onTimer: () => void; onCapture: () => void }) {
   const [query, setQuery] = useState("");
+  const [history, setHistory] = useState(loadHistory);
+  const [historyIndex, setHistoryIndex] = useState(-1);
   const { notes } = useQuickNotes();
   const { items } = usePlanner();
   const { start } = useFocus();
@@ -119,10 +130,11 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
     const value = parseMath(expression);
     if (value !== null) commandResults.push({ id: "calculator", title: formatNumber(value), detail: "Calculator", action: () => undefined });
 
-    const noteResults = notes.filter((note) => !note.private && `${note.title} ${note.body}`.toLowerCase().includes(term)).map((note) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
-    const plannerResults = items.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(term)).map((item) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
+    const noteResults = notes.map((note) => ({ note, score: fuzzyScore(`${note.title} ${note.body}`, term) })).filter(({ note, score }) => !note.private && score >= 0).sort((a, b) => b.score - a.score).map(({ note }) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
+    const plannerResults = items.map((item) => ({ item, score: fuzzyScore(`${item.title} ${item.description}`, term) })).filter(({ score }) => score >= 0).sort((a, b) => b.score - a.score).map(({ item }) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
     return [...commandResults, ...noteResults, ...plannerResults];
   }, [items, notes, onBack, onCapture, onFocus, onNotes, onPlanner, onSettings, onTimer, query, start, startTimer, update]);
 
-  return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-results">{query && results.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{results.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => void result.action()}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
+  const execute = (action: () => void | Promise<void>) => { const value = query.trim(); if (value) { const next = [value, ...history.filter((item) => item !== value)].slice(0, 20); setHistory(next); try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* History is optional. */ } } void action(); };
+  return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => { setQuery(event.target.value); setHistoryIndex(-1); }} onKeyDown={(event) => { if (event.key === "ArrowUp" && history.length) { event.preventDefault(); const next = Math.min(historyIndex + 1, history.length - 1); setHistoryIndex(next); setQuery(history[next]); } else if (event.key === "ArrowDown" && historyIndex >= 0) { event.preventDefault(); const next = historyIndex - 1; setHistoryIndex(next); setQuery(next < 0 ? "" : history[next]); } }} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-results">{query && results.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{!query && history.length > 0 && <p className="search-history-label">Recent commands</p>}{!query && history.slice(0, 5).map((item) => <button className="search-result history-result" key={item} onClick={() => setQuery(item)}><span>Recent</span><strong>{item}</strong></button>)}{results.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => execute(result.action)}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
 }
