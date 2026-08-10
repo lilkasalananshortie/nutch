@@ -48,6 +48,7 @@ export interface QuickNote {
   title: string;
   body: string;
   updatedAt: number;
+  private: boolean;
 }
 
 export interface PlannerItem {
@@ -120,4 +121,6 @@ export const native = {
   setGeometry: (width: number, height: number, topOffset: number, monitorId: string) => invoke<void>("set_notch_geometry", { width, height, topOffset, monitorId }),
   reposition: (topOffset: number, monitorId: string) => invoke<void>("reposition_notch", { topOffset, monitorId }),
   quit: () => invoke<void>("quit_nutch"),
+  exportBackup: (destination: string) => invoke<void>("export_backup", { destination }),
+  restoreBackup: (source: string) => invoke<void>("restore_backup", { source }),
 };

@@ -1,4 +1,5 @@
 mod audio;
+mod backup;
 mod battery;
 mod media;
 mod metrics;
@@ -8,6 +9,7 @@ mod settings;
 mod window;
 
 use audio::{get_master_volume, set_master_volume, set_mute_state, start_audio_listener};
+use backup::{export_backup, restore_backup};
 use battery::get_battery_status;
 use media::{control_media, get_media_status};
 use metrics::get_system_stats;
@@ -41,6 +43,7 @@ pub fn run() {
             None,
         ))
         .plugin(tauri_plugin_notification::init())
+        .plugin(tauri_plugin_dialog::init())
         .setup(|app| {
             if let Some(window) = app.get_webview_window("main") {
                 let _ = window.set_always_on_top(true);
@@ -68,7 +71,9 @@ pub fn run() {
             set_notch_geometry,
             reposition_notch,
             list_monitors,
-            quit_nutch
+            quit_nutch,
+            export_backup,
+            restore_backup
         ])
         .run(tauri::generate_context!())
         .expect("error while running Nutch");

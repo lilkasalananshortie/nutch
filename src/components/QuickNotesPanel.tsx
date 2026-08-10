@@ -3,6 +3,7 @@ import { useQuickNotes } from "../hooks/useQuickNotes";
 import type { QuickNote } from "../lib/native";
 
 function notePreview(note: QuickNote) {
+  if (note.private) return "Private note";
   const preview = note.body.trim().replace(/\s+/g, " ");
   return preview || "No additional text";
 }
@@ -44,6 +45,7 @@ function NoteEditor({ note, onBack, onSave, onDelete }: { note: QuickNote; onBac
       <input className="note-title-input" maxLength={120} value={draft.title} placeholder="Title" onChange={(event) => change({ title: event.target.value })} />
       <time className="note-date">{new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(draft.updatedAt)}</time>
       <textarea autoFocus className="note-body-input" maxLength={20_000} value={draft.body} placeholder="Start typing…" onChange={(event) => change({ body: event.target.value })} />
+      <label className="private-note-toggle"><input type="checkbox" checked={draft.private} onChange={(event) => change({ private: event.target.checked })} /> Private note <small>Hidden from normal Search previews</small></label>
     </div>
   );
 }
@@ -54,7 +56,7 @@ export function QuickNotesPanel({ onBack }: { onBack: () => void }) {
   const selected = notes.find((note) => note.id === selectedId);
 
   const createNote = async () => {
-    const note: QuickNote = { id: crypto.randomUUID(), title: "", body: "", updatedAt: Date.now() };
+    const note: QuickNote = { id: crypto.randomUUID(), title: "", body: "", updatedAt: Date.now(), private: false };
     await save(note);
     setSelectedId(note.id);
   };

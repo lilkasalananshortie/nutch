@@ -13,6 +13,8 @@ pub struct QuickNote {
     title: String,
     body: String,
     updated_at: u64,
+    #[serde(default)]
+    private: bool,
 }
 
 fn notes_path(app: &AppHandle) -> Result<PathBuf, String> {
@@ -100,6 +102,7 @@ mod tests {
             title: "Quick thought".into(),
             body: "Remember this".into(),
             updated_at: 1,
+            private: false,
         };
         assert!(validate_note(&note).is_ok());
     }

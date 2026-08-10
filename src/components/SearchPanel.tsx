@@ -114,7 +114,7 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus }:
     const value = parseMath(expression);
     if (value !== null) commandResults.push({ id: "calculator", title: formatNumber(value), detail: "Calculator", action: () => undefined });
 
-    const noteResults = notes.filter((note) => `${note.title} ${note.body}`.toLowerCase().includes(term)).map((note) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
+    const noteResults = notes.filter((note) => !note.private && `${note.title} ${note.body}`.toLowerCase().includes(term)).map((note) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
     const plannerResults = items.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(term)).map((item) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
     return [...commandResults, ...noteResults, ...plannerResults];
   }, [items, notes, onBack, onFocus, onNotes, onPlanner, onSettings, query, start, update]);

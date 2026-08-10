@@ -378,3 +378,11 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 .diagnostic-row span { color: var(--nutch-text-secondary); }
 .diagnostic-row b { color: var(--nutch-text-primary); font-weight: 500; text-align: right; }
 .diagnostic-row b.muted { color: var(--nutch-text-muted); }
+.settings-data { display: grid; gap: 7px; margin-top: 10px; padding: 14px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); background: var(--nutch-surface); }
+.settings-data > strong { font-size: 13px; }
+.settings-data > small { color: var(--nutch-text-secondary); }
+.settings-data > div { display: flex; gap: 7px; }
+.settings-data .secondary-button { flex: 1; }
+.private-note-toggle { display: flex; align-items: center; gap: 7px; padding: 9px 0; color: var(--nutch-text-secondary); font-size: 12px; }
+.private-note-toggle input { accent-color: #d7d7dc; }
+.private-note-toggle small { color: var(--nutch-text-muted); }

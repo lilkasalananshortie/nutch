@@ -9,7 +9,7 @@ export function useQuickNotes() {
   useEffect(() => {
     let active = true;
     void native.notes()
-      .then((loaded) => { if (active) setNotes(loaded); })
+      .then((loaded) => { if (active) setNotes(loaded.map((note) => ({ ...note, private: Boolean(note.private) }))); })
       .catch((reason) => { if (active) setError(reason instanceof Error ? reason.message : String(reason)); })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };

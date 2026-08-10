@@ -1,5 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { isPermissionGranted, requestPermission, sendNotification } from "@tauri-apps/plugin-notification";
+import { open, save } from "@tauri-apps/plugin-dialog";
 import { DEFAULT_SETTINGS, native, type DisplayInfo } from "../lib/native";
 import { useSettings } from "../stores/settings";
 import { useNotifications } from "../stores/notifications";
@@ -15,6 +16,7 @@ export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () =
   const [topOffset, setTopOffset] = useState(settings.topOffset);
   const [monitors, setMonitors] = useState<DisplayInfo[]>([]);
   const [notificationMessage, setNotificationMessage] = useState<string | null>(null);
+  const [dataMessage, setDataMessage] = useState<string | null>(null);
   useEffect(() => setTopOffset(settings.topOffset), [settings.topOffset]);
   useEffect(() => { void native.monitors().then(setMonitors).catch(() => setMonitors([])); }, []);
   const commitTopOffset = () => {
@@ -43,6 +45,19 @@ export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () =
   };
   const resetAppearance = () => void update({ displayStyle: DEFAULT_SETTINGS.displayStyle, topOffset: DEFAULT_SETTINGS.topOffset, minimalIdleMode: DEFAULT_SETTINGS.minimalIdleMode, fullscreenBehavior: DEFAULT_SETTINGS.fullscreenBehavior });
   const resetAllSettings = () => { if (window.confirm("Reset Nutch settings? Notes and Planner data will be preserved.")) void update({ ...DEFAULT_SETTINGS, onboardingCompleted: true }); };
+  const exportBackup = async () => {
+    setDataMessage(null);
+    const destination = await save({ defaultPath: "Nutch-backup.json", filters: [{ name: "Nutch backup", extensions: ["json"] }] });
+    if (!destination || Array.isArray(destination)) return;
+    try { await native.exportBackup(destination); setDataMessage("Backup exported successfully."); } catch (reason) { setDataMessage(reason instanceof Error ? reason.message : String(reason)); }
+  };
+  const restoreBackup = async () => {
+    setDataMessage(null);
+    if (!window.confirm("Restore this backup? Current Settings, Notes, and Planner data will be replaced.")) return;
+    const source = await open({ multiple: false, directory: false, filters: [{ name: "Nutch backup", extensions: ["json"] }] });
+    if (!source || Array.isArray(source)) return;
+    try { await native.restoreBackup(source); setDataMessage("Backup restored. Restart Nutch to reload the restored data."); } catch (reason) { setDataMessage(reason instanceof Error ? reason.message : String(reason)); }
+  };
   return (
     <div className="settings-panel">
       <header className="panel-header">
@@ -73,6 +88,7 @@ export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () =
       <button className="secondary-button" onClick={onDiagnostics}>About & diagnostics</button>
       <button className="secondary-button" onClick={resetAppearance}>Reset appearance</button>
       <button className="secondary-button" onClick={resetAllSettings}>Reset all settings</button>
+      <div className="settings-data"><strong>Data</strong><small>Versioned local backup for Settings, Notes, and Planner</small><div><button className="secondary-button" onClick={() => void exportBackup()}>Export backup</button><button className="secondary-button" onClick={() => void restoreBackup()}>Restore backup</button></div>{dataMessage && <p className="settings-note">{dataMessage}</p>}</div>
       <button className="quit-button" onClick={() => void native.quit()}>Quit Nutch</button>
     </div>
   );
