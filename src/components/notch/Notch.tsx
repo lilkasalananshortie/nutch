@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState, type MouseEvent, type WheelEvent } from "react";
 import { getCurrentWindow } from "@tauri-apps/api/window";
 import { sendNotification } from "@tauri-apps/plugin-notification";
+import { register, unregister } from "@tauri-apps/plugin-global-shortcut";
 import { useBattery } from "../../hooks/useBattery";
 import { useMediaSession } from "../../hooks/useMediaSession";
 import { useNotchGeometry, type NotchView } from "../../hooks/useNotchGeometry";
@@ -127,6 +128,28 @@ export function Notch() {
   const handleEnter = () => { cancelCollapse(); if (!ready) return; if (settings.hoverToExpand) setExpanded(true); };
   const handleClick = (event: MouseEvent) => { if (!ready || !settings.clickToExpand || view !== "main") return; if (!expanded) setExpanded(true); else if (event.currentTarget === event.target) setExpanded(false); };
   const openView = (next: NotchView) => { cancelCollapse(); setView(next); setExpanded(true); };
+
+  useEffect(() => {
+    const listener = (event: Event) => {
+      const detail = (event as CustomEvent<string>).detail;
+      if (detail === "search") openView("search");
+      if (detail === "capture") openView("capture");
+    };
+    window.addEventListener("nutch:shortcut", listener);
+    return () => window.removeEventListener("nutch:shortcut", listener);
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+    const registerShortcuts = async () => {
+      try {
+        await register("Alt+Space", () => { if (active) window.dispatchEvent(new CustomEvent("nutch:shortcut", { detail: "search" })); });
+        await register("Alt+N", () => { if (active) window.dispatchEvent(new CustomEvent("nutch:shortcut", { detail: "capture" })); });
+      } catch { /* Another application may own a shortcut; Nutch remains usable from the rail. */ }
+    };
+    void registerShortcuts();
+    return () => { active = false; void unregister("Alt+Space").catch(() => undefined); void unregister("Alt+N").catch(() => undefined); };
+  }, []);
 
   return <main className={`notch-shell ${expanded ? "expanded" : "collapsed"} view-${view} display-${settings.displayStyle} ${ready ? "ready" : ""}`} onMouseEnter={() => { cancelCollapse(); handleEnter(); }} onMouseLeave={() => { if (view === "main") collapseSoon(); }} onClick={handleClick} onWheel={onWheel} aria-label="Nutch system controls">
     {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} />}

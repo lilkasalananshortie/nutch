@@ -11,6 +11,7 @@ All notable changes to Nutch are documented here.
 - Quick Capture for Notes, Tasks, and scheduled Reminders.
 - General timestamp-based Timer with pause, resume, and Search commands such as `timer 20m`.
 - Lightweight fuzzy matching and privacy-conscious local command history in Quick Search.
+- Official Tauri global shortcuts: Alt+Space for Search and Alt+N for Quick Capture, with conflict-safe fallback.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.

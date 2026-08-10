@@ -9,6 +9,7 @@
     "autostart:allow-disable",
     "autostart:allow-is-enabled",
     "notification:default",
-    "dialog:default"
+    "dialog:default",
+    "global-shortcut:default"
   ]
 }
