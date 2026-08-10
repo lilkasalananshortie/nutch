@@ -420,3 +420,11 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 .activity-stack button:first-child span { color: var(--nutch-text-muted); font-size: 10px; }
 .activity-stack button:first-child strong { overflow: hidden; color: var(--nutch-text-primary); font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
 .activity-stack button:hover { background: var(--nutch-surface-hover); color: var(--nutch-text-primary); }
+.today-panel { min-height: 420px; display: flex; flex-direction: column; gap: 18px; padding: 20px; background: var(--nutch-bg); }
+.today-content { display: grid; gap: 10px; overflow: auto; }
+.today-section { display: grid; gap: 6px; padding: 14px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); background: var(--nutch-surface); }
+.today-section > span { color: var(--nutch-text-muted); font-size: 10px; letter-spacing: .12em; }
+.today-section > strong { color: var(--nutch-text-primary); font-size: 26px; font-variant-numeric: tabular-nums; font-weight: 500; }
+.today-section > small, .today-row small, .today-next small { color: var(--nutch-text-secondary); font-size: 12px; }
+.today-row, .today-next { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
+.today-row strong, .today-next strong { overflow: hidden; color: var(--nutch-text-primary); font-size: 14px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }

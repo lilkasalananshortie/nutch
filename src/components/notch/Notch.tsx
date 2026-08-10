@@ -22,6 +22,7 @@ import { Onboarding } from "../Onboarding";
 import { DiagnosticsPanel } from "../DiagnosticsPanel";
 import { TimerPanel } from "../TimerPanel";
 import { QuickCapture } from "../QuickCapture";
+import { TodayPanel } from "../TodayPanel";
 import { CollapsedNotch } from "./CollapsedNotch";
 import { ExpandedNotch } from "./ExpandedNotch";
 
@@ -153,7 +154,7 @@ export function Notch() {
 
   return <main className={`notch-shell ${expanded ? "expanded" : "collapsed"} view-${view} display-${settings.displayStyle} ${ready ? "ready" : ""}`} onMouseEnter={() => { cancelCollapse(); handleEnter(); }} onMouseLeave={() => { if (view === "main") collapseSoon(); }} onClick={handleClick} onWheel={onWheel} aria-label="Nutch system controls">
     {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} privacyMode={settings.privacyMode} />}
-    {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} onTimer={() => openView("timer")} onCapture={() => openView("capture")} />}
+    {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} onTimer={() => openView("timer")} onCapture={() => openView("capture")} onToday={() => openView("today")} />}
     {expanded && view === "settings" && <SettingsPanel onBack={() => setView("main")} onSetup={() => openView("onboarding")} onDiagnostics={() => openView("diagnostics")} />}
     {expanded && view === "onboarding" && <Onboarding onComplete={() => { setView("main"); setExpanded(false); }} />}
     {expanded && view === "diagnostics" && <DiagnosticsPanel onBack={() => setView("settings")} />}
@@ -164,5 +165,6 @@ export function Notch() {
     {expanded && view === "focus" && <FocusPanel onBack={() => setView("main")} />}
     {expanded && view === "timer" && <TimerPanel onBack={() => setView("main")} />}
     {expanded && view === "capture" && <QuickCapture onBack={() => setView("main")} />}
+    {expanded && view === "today" && <TodayPanel onBack={() => setView("main")} />}
   </main>;
 }

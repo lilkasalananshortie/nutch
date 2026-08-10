@@ -24,11 +24,12 @@ interface ExpandedNotchProps {
   onFocus: () => void;
   onTimer: () => void;
   onCapture: () => void;
+  onToday: () => void;
   onVolumeActivity: (status: { volume: number; muted: boolean }) => void;
   onMediaControl: (action: "toggle" | "next" | "previous") => void;
 }
 
-export function ExpandedNotch({ format, battery, media, mediaError, unreadCount, onSettings, onNotes, onNotifications, onPlanner, onSearch, onFocus, onTimer, onCapture, onVolumeActivity, onMediaControl }: ExpandedNotchProps) {
+export function ExpandedNotch({ format, battery, media, mediaError, unreadCount, onSettings, onNotes, onNotifications, onPlanner, onSearch, onFocus, onTimer, onCapture, onToday, onVolumeActivity, onMediaControl }: ExpandedNotchProps) {
   const volume = useSystemVolume(true, onVolumeActivity);
   const { settings } = useSettings();
   const { activities, current: activity, cycle, togglePinned } = useLiveActivity();
@@ -48,6 +49,7 @@ export function ExpandedNotch({ format, battery, media, mediaError, unreadCount,
       <button className="rail-button" onClick={onFocus} aria-label="Open Focus" title="Focus"><Icon name="focus" size="small" /></button>
       <button className="rail-button" onClick={onTimer} aria-label="Open Timer" title="Timer"><Icon name="timer" size="small" /></button>
       <button className="rail-button" onClick={onCapture} aria-label="Quick Capture" title="Quick Capture"><Icon name="plus" size="small" /></button>
+      <button className="rail-button" onClick={onToday} aria-label="Open Today" title="Today"><Icon name="planner" size="small" /></button>
       <button className="rail-button" onClick={onNotifications} aria-label="Open Notifications" title="Alerts"><Icon name="notifications" size="small" />{unreadCount > 0 && <b>{Math.min(unreadCount, 9)}</b>}</button>
       <button className="rail-button" onClick={onSettings} aria-label="Open Settings" title="Settings"><Icon name="settings" size="small" /></button>
     </aside>

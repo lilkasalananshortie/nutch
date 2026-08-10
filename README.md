@@ -25,6 +25,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 - Global shortcuts: `Alt+Space` for Quick Search and `Alt+N` for Quick Capture
 - Manual Privacy mode masks collapsed media/activity titles; notification history is bounded
 - Context activity stack with pinning/cycling and multiple labeled persistent timers
+- Compact Today view for current Focus, active timers, and the next Planner item
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences
@@ -77,12 +78,12 @@ is in [SECURITY.md](SECURITY.md).
 ## Roadmap
 
 Completed maturity work includes onboarding, single-instance behavior,
-settings recovery, diagnostics, and restart-safe reminders. Planned work is
-versioned backup/restore, a general timer, opt-in clipboard history, profiles,
-and an optional AI action provider. Signed updates, Windows-wide downloads,
-microphone/camera indicators, brightness control, and automatic fullscreen
-detection remain deferred until reliable user-space APIs and release keys are
-available.
+settings recovery, diagnostics, restart-safe reminders, versioned backup/restore,
+Quick Capture, labeled timers, fuzzy Search, global shortcuts, and the Today
+surface. Planned work is opt-in clipboard history, profiles, and an optional AI
+action provider. Signed updates, Windows-wide downloads, microphone/camera
+indicators, brightness control, and automatic fullscreen detection remain
+deferred until reliable user-space APIs and release keys are available.
 
 ## Architecture
 
