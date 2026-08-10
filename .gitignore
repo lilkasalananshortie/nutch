@@ -1,0 +1,31 @@
+# Dependencies and generated frontend output
+node_modules/
+dist/
+dist-ssr/
+
+# Rust/Tauri build output and signing material
+target/
+src-tauri/target/
+src-tauri/tauri.signing.conf.json
+
+# Environment, credentials, logs, and local state
+.env
+.env.*
+!.env.example
+*.log
+*.tmp
+*.db
+*.sqlite
+*.sqlite3
+*.json.bak
+
+# IDE and operating-system files
+.vscode/*
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
