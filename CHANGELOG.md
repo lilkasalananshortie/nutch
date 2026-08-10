@@ -18,6 +18,7 @@ All notable changes to Nutch are documented here.
 - Multiple persistent labeled timers with pinning and Search labels such as `timer 5m coffee`.
 - Compact Today view for current Focus, active timers, and the next Planner item.
 - Local profile selector for Default, Work, Study, Gaming, and Presentation policies.
+- Quick Search aliases/prefix normalization and safe Privacy/DND/history actions.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.

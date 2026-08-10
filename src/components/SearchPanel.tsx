@@ -96,11 +96,12 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
   const { items } = usePlanner();
   const { start } = useFocus();
   const { start: startTimer } = useTimer();
-  const { update } = useSettings();
+  const { settings, update } = useSettings();
 
   const results = useMemo<SearchResult[]>(() => {
     const raw = query.trim();
-    const term = raw.toLowerCase();
+    const normalized = raw.replace(/^[>@#!?]\s*/, "").replace(/^vol\b/i, "volume").replace(/^dnd\b/i, "do not disturb");
+    const term = normalized.toLowerCase();
     if (!term) return [];
     const commandResults: SearchResult[] = [];
     const volumeMatch = term.match(/^volume\s+(\d{1,3})%?$/);
@@ -117,6 +118,9 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
     if (term === "quick capture" || term === "capture" || term === "new") commandResults.push({ id: "command-capture", title: "Open Quick Capture", detail: "Nutch action", action: onCapture });
     if (term === "new task" || term === "task" || term === "planner") commandResults.push({ id: "command-task", title: "Open Planner", detail: "Nutch action", action: onPlanner });
     if (term === "open settings" || term === "settings") commandResults.push({ id: "command-settings", title: "Open Settings", detail: "Nutch action", action: onSettings });
+    if (term === "dnd" || term === "do not disturb") commandResults.push({ id: "command-dnd", title: "Toggle Do Not Disturb", detail: "Nutch action", action: () => update({ doNotDisturb: !settings.doNotDisturb }).then(onBack) });
+    if (term === "privacy" || term === "privacy mode") commandResults.push({ id: "command-privacy", title: "Toggle Privacy mode", detail: "Nutch action", action: () => update({ privacyMode: !settings.privacyMode }).then(onBack) });
+    if (term === "clear command history") commandResults.push({ id: "command-clear-history", title: "Clear command history", detail: "Nutch action", action: () => { setHistory([]); setHistoryIndex(-1); localStorage.removeItem(HISTORY_KEY); onBack(); } });
     if (term === "notch mode" || term === "island mode") { const mode = term.startsWith("notch") ? "notch" : "island"; commandResults.push({ id: `command-${mode}`, title: `Switch to ${mode[0].toUpperCase()}${mode.slice(1)} mode`, detail: "Nutch action", action: () => update({ displayStyle: mode }).then(onBack) }); }
 
     const conversion = term.match(/^(-?(?:\d+(?:\.\d*)?|\.\d+))\s*([a-z°]+)\s+(?:to|in)\s+([a-z°]+)$/);
@@ -133,7 +137,7 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
     const noteResults = notes.map((note) => ({ note, score: fuzzyScore(`${note.title} ${note.body}`, term) })).filter(({ note, score }) => !note.private && score >= 0).sort((a, b) => b.score - a.score).map(({ note }) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
     const plannerResults = items.map((item) => ({ item, score: fuzzyScore(`${item.title} ${item.description}`, term) })).filter(({ score }) => score >= 0).sort((a, b) => b.score - a.score).map(({ item }) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
     return [...commandResults, ...noteResults, ...plannerResults];
-  }, [items, notes, onBack, onCapture, onFocus, onNotes, onPlanner, onSettings, onTimer, query, start, startTimer, update]);
+  }, [items, notes, onBack, onCapture, onFocus, onNotes, onPlanner, onSettings, onTimer, query, settings.doNotDisturb, settings.privacyMode, start, startTimer, update]);
 
   const execute = (action: () => void | Promise<void>) => { const value = query.trim(); if (value) { const next = [value, ...history.filter((item) => item !== value)].slice(0, 20); setHistory(next); try { localStorage.setItem(HISTORY_KEY, JSON.stringify(next)); } catch { /* History is optional. */ } } void action(); };
   return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => { setQuery(event.target.value); setHistoryIndex(-1); }} onKeyDown={(event) => { if (event.key === "ArrowUp" && history.length) { event.preventDefault(); const next = Math.min(historyIndex + 1, history.length - 1); setHistoryIndex(next); setQuery(history[next]); } else if (event.key === "ArrowDown" && historyIndex >= 0) { event.preventDefault(); const next = historyIndex - 1; setHistoryIndex(next); setQuery(next < 0 ? "" : history[next]); } }} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-results">{query && results.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{!query && history.length > 0 && <p className="search-history-label">Recent commands</p>}{!query && history.slice(0, 5).map((item) => <button className="search-result history-result" key={item} onClick={() => setQuery(item)}><span>Recent</span><strong>{item}</strong></button>)}{results.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => execute(result.action)}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
