@@ -4,6 +4,7 @@ import { useQuickNotes } from "../hooks/useQuickNotes";
 import { native } from "../lib/native";
 import { useFocus } from "../stores/focus";
 import { useSettings } from "../stores/settings";
+import { useTimer } from "../stores/timer";
 import { Icon } from "./ui/Icon";
 
 type SearchResult = { id: string; title: string; detail: string; action: () => void | Promise<void> };
@@ -78,11 +79,12 @@ function formatNumber(value: number) {
   return Number.isInteger(value) ? String(value) : value.toLocaleString(undefined, { maximumFractionDigits: 4 });
 }
 
-export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus }: { onBack: () => void; onNotes: () => void; onPlanner: () => void; onSettings: () => void; onFocus: () => void }) {
+export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, onTimer, onCapture }: { onBack: () => void; onNotes: () => void; onPlanner: () => void; onSettings: () => void; onFocus: () => void; onTimer: () => void; onCapture: () => void }) {
   const [query, setQuery] = useState("");
   const { notes } = useQuickNotes();
   const { items } = usePlanner();
   const { start } = useFocus();
+  const { start: startTimer } = useTimer();
   const { update } = useSettings();
 
   const results = useMemo<SearchResult[]>(() => {
@@ -98,7 +100,10 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus }:
     if (term === "mute" || term === "unmute" || term === "toggle mute") commandResults.push({ id: "command-mute", title: term === "unmute" ? "Unmute system audio" : term === "mute" ? "Mute system audio" : "Toggle mute", detail: "Nutch action", action: async () => { const status = await native.volume(); await native.setMuted(term === "mute" ? true : term === "unmute" ? false : !status.muted); onBack(); } });
     const focusMatch = term.match(/^focus\s+(\d{1,3})\s*(?:m|min|minutes)?$/);
     if (focusMatch) { const minutes = Math.max(1, Math.min(240, Number(focusMatch[1]))); commandResults.push({ id: "command-focus", title: `Start ${minutes}-minute Focus`, detail: "Nutch action", action: () => { start(minutes); onFocus(); } }); }
+    const timerMatch = term.match(/^timer\s+(\d{1,4})\s*(?:m|min|minutes)?$/);
+    if (timerMatch) { const minutes = Math.max(1, Math.min(1440, Number(timerMatch[1]))); commandResults.push({ id: "command-timer", title: `Start ${minutes}-minute Timer`, detail: "Nutch action", action: () => { startTimer(minutes); onTimer(); } }); }
     if (term === "new note" || term === "note") commandResults.push({ id: "command-note", title: "Create a new note", detail: "Nutch action", action: onNotes });
+    if (term === "quick capture" || term === "capture" || term === "new") commandResults.push({ id: "command-capture", title: "Open Quick Capture", detail: "Nutch action", action: onCapture });
     if (term === "new task" || term === "task" || term === "planner") commandResults.push({ id: "command-task", title: "Open Planner", detail: "Nutch action", action: onPlanner });
     if (term === "open settings" || term === "settings") commandResults.push({ id: "command-settings", title: "Open Settings", detail: "Nutch action", action: onSettings });
     if (term === "notch mode" || term === "island mode") { const mode = term.startsWith("notch") ? "notch" : "island"; commandResults.push({ id: `command-${mode}`, title: `Switch to ${mode[0].toUpperCase()}${mode.slice(1)} mode`, detail: "Nutch action", action: () => update({ displayStyle: mode }).then(onBack) }); }
@@ -117,7 +122,7 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus }:
     const noteResults = notes.filter((note) => !note.private && `${note.title} ${note.body}`.toLowerCase().includes(term)).map((note) => ({ id: note.id, title: note.title || "Untitled note", detail: "Note", action: onNotes }));
     const plannerResults = items.filter((item) => `${item.title} ${item.description}`.toLowerCase().includes(term)).map((item) => ({ id: item.id, title: item.title, detail: "Planner", action: onPlanner }));
     return [...commandResults, ...noteResults, ...plannerResults];
-  }, [items, notes, onBack, onFocus, onNotes, onPlanner, onSettings, query, start, update]);
+  }, [items, notes, onBack, onCapture, onFocus, onNotes, onPlanner, onSettings, onTimer, query, start, startTimer, update]);
 
   return <section className="search-panel"><header className="panel-header"><button className="back-button" onClick={onBack} aria-label="Back to system controls"><Icon name="back" size="small" /></button><div><h1>Quick Search</h1><p>Apps, notes, tasks, commands, and calculations</p></div></header><label className="search-box"><Icon name="search" size="small" /><input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Try ‘volume 50’, ‘20 km to miles’, or 2^8" /></label><div className="search-results">{query && results.length === 0 && <p className="notes-empty">No matching Nutch items.</p>}{results.map((result) => <button className="search-result" key={`${result.detail}-${result.id}`} onClick={() => void result.action()}><span>{result.detail}</span><strong>{result.title}</strong></button>)}</div></section>;
 }

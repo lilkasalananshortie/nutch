@@ -3,6 +3,7 @@ import { SettingsProvider } from "./stores/settings";
 import { NotificationProvider } from "./stores/notifications";
 import { LiveActivityProvider } from "./stores/liveActivity";
 import { FocusProvider } from "./stores/focus";
+import { TimerProvider } from "./stores/timer";
 import "./App.css";
 
 export default function App() {
@@ -11,7 +12,7 @@ export default function App() {
       <NotificationProvider>
         <LiveActivityProvider>
           <FocusProvider>
-            <Notch />
+            <TimerProvider><Notch /></TimerProvider>
           </FocusProvider>
         </LiveActivityProvider>
       </NotificationProvider>

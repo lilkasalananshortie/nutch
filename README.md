@@ -20,6 +20,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences
 - First-run onboarding, single-instance protection, missed-reminder recovery, and non-sensitive diagnostics
 - Versioned local backup/restore and privacy-aware Private Notes
+- Quick Capture and a sleep-safe general Timer
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences

@@ -8,6 +8,8 @@ All notable changes to Nutch are documented here.
 
 - Versioned JSON backup export/restore for Settings, Notes, and Planner with validation and atomic writes.
 - Private Notes that are excluded from ordinary Quick Search previews.
+- Quick Capture for Notes, Tasks, and scheduled Reminders.
+- General timestamp-based Timer with pause, resume, and Search commands such as `timer 20m`.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.

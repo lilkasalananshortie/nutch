@@ -386,3 +386,21 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 .private-note-toggle { display: flex; align-items: center; gap: 7px; padding: 9px 0; color: var(--nutch-text-secondary); font-size: 12px; }
 .private-note-toggle input { accent-color: #d7d7dc; }
 .private-note-toggle small { color: var(--nutch-text-muted); }
+.timer-panel, .capture-panel { min-height: 340px; display: flex; flex-direction: column; gap: 14px; padding: 20px; background: var(--nutch-bg); }
+.timer-presets { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.timer-presets button { display: grid; gap: 3px; padding: 16px 8px; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); color: var(--nutch-text-primary); background: var(--nutch-surface); cursor: pointer; }
+.timer-presets button:hover { background: var(--nutch-surface-hover); }
+.timer-presets strong { font-size: 24px; font-variant-numeric: tabular-nums; }
+.timer-presets small, .timer-custom, .capture-hint { color: var(--nutch-text-secondary); font-size: 12px; }
+.timer-custom { display: grid; grid-template-columns: 1fr 92px auto; align-items: center; gap: 8px; }
+.timer-custom input { width: 78px; border: 1px solid var(--nutch-border); border-radius: 8px; padding: 8px; color: var(--nutch-text-primary); background: var(--nutch-surface); }
+.timer-active { display: grid; gap: 14px; place-items: center; padding: 28px 12px; }
+.timer-active > strong { font-size: 54px; font-variant-numeric: tabular-nums; letter-spacing: -.05em; }
+.timer-active > span { color: var(--nutch-text-secondary); }
+.timer-active > div { display: flex; gap: 8px; }
+.capture-panel textarea { min-height: 150px; resize: vertical; border: 1px solid var(--nutch-border); border-radius: var(--radius-medium); padding: 14px; color: var(--nutch-text-primary); background: var(--nutch-surface); font: inherit; line-height: 1.5; }
+.capture-segmented { display: grid; grid-template-columns: repeat(3, 1fr); gap: 4px; padding: 4px; border-radius: 10px; background: var(--nutch-surface); }
+.capture-segmented button { min-height: 30px; border: 0; border-radius: 7px; color: var(--nutch-text-secondary); background: transparent; cursor: pointer; font: inherit; font-size: 12px; }
+.capture-segmented button.selected { color: var(--nutch-text-primary); background: var(--nutch-surface-hover); }
+.capture-due { display: grid; gap: 6px; color: var(--nutch-text-secondary); font-size: 12px; }
+.capture-due input { border: 1px solid var(--nutch-border); border-radius: 8px; padding: 8px; color: var(--nutch-text-primary); background: var(--nutch-surface); }

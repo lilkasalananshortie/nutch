@@ -10,6 +10,7 @@ import { useFocus } from "../../stores/focus";
 import { useLiveActivity } from "../../stores/liveActivity";
 import { useNotifications } from "../../stores/notifications";
 import { useSettings } from "../../stores/settings";
+import { useTimer } from "../../stores/timer";
 import { FocusPanel } from "../FocusPanel";
 import { NotificationPanel } from "../NotificationPanel";
 import { PlannerPanel } from "../PlannerPanel";
@@ -18,6 +19,8 @@ import { SearchPanel } from "../SearchPanel";
 import { SettingsPanel } from "../SettingsPanel";
 import { Onboarding } from "../Onboarding";
 import { DiagnosticsPanel } from "../DiagnosticsPanel";
+import { TimerPanel } from "../TimerPanel";
+import { QuickCapture } from "../QuickCapture";
 import { CollapsedNotch } from "./CollapsedNotch";
 import { ExpandedNotch } from "./ExpandedNotch";
 
@@ -32,6 +35,7 @@ export function Notch() {
   const media = useMediaSession(settings.showMedia);
   const planner = usePlanner();
   const focus = useFocus();
+  const timer = useTimer();
   const { current: activity, push, upsert, remove } = useLiveActivity();
   const { unreadCount, addNotification } = useNotifications();
   const [expanded, setExpanded] = useState(false);
@@ -69,6 +73,11 @@ export function Notch() {
     if (focus.session) upsert({ id: "focus", kind: "focus", title: "Focus", detail: `${Math.ceil(focus.session.remainingMs / 60_000)} min`, priority: 40 });
     else remove("focus");
   }, [focus.session, upsert, remove]);
+
+  useEffect(() => {
+    if (timer.session) upsert({ id: "timer", kind: "timer", title: "Timer", detail: `${Math.ceil(timer.session.remainingMs / 60_000)} min`, priority: 45 });
+    else remove("timer");
+  }, [timer.session, upsert, remove]);
 
   useEffect(() => {
     const checkReminders = () => {
@@ -121,14 +130,16 @@ export function Notch() {
 
   return <main className={`notch-shell ${expanded ? "expanded" : "collapsed"} view-${view} display-${settings.displayStyle} ${ready ? "ready" : ""}`} onMouseEnter={() => { cancelCollapse(); handleEnter(); }} onMouseLeave={() => { if (view === "main") collapseSoon(); }} onClick={handleClick} onWheel={onWheel} aria-label="Nutch system controls">
     {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} />}
-    {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} />}
+    {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} onTimer={() => openView("timer")} onCapture={() => openView("capture")} />}
     {expanded && view === "settings" && <SettingsPanel onBack={() => setView("main")} onSetup={() => openView("onboarding")} onDiagnostics={() => openView("diagnostics")} />}
     {expanded && view === "onboarding" && <Onboarding onComplete={() => { setView("main"); setExpanded(false); }} />}
     {expanded && view === "diagnostics" && <DiagnosticsPanel onBack={() => setView("settings")} />}
     {expanded && view === "notes" && <QuickNotesPanel onBack={() => setView("main")} />}
     {expanded && view === "notifications" && <NotificationPanel onBack={() => setView("main")} />}
     {expanded && view === "planner" && <PlannerPanel onBack={() => setView("main")} />}
-    {expanded && view === "search" && <SearchPanel onBack={() => setView("main")} onNotes={() => setView("notes")} onPlanner={() => setView("planner")} onSettings={() => setView("settings")} onFocus={() => setView("focus")} />}
+    {expanded && view === "search" && <SearchPanel onBack={() => setView("main")} onNotes={() => setView("notes")} onPlanner={() => setView("planner")} onSettings={() => setView("settings")} onFocus={() => setView("focus")} onTimer={() => setView("timer")} onCapture={() => setView("capture")} />}
     {expanded && view === "focus" && <FocusPanel onBack={() => setView("main")} />}
+    {expanded && view === "timer" && <TimerPanel onBack={() => setView("main")} />}
+    {expanded && view === "capture" && <QuickCapture onBack={() => setView("main")} />}
   </main>;
 }
