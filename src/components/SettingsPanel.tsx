@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties } from "react";
 import { isPermissionGranted, requestPermission, sendNotification } from "@tauri-apps/plugin-notification";
-import { native, type DisplayInfo } from "../lib/native";
+import { DEFAULT_SETTINGS, native, type DisplayInfo } from "../lib/native";
 import { useSettings } from "../stores/settings";
 import { useNotifications } from "../stores/notifications";
 
@@ -41,6 +41,8 @@ export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () =
       setNotificationMessage("Install Nutch before testing notifications.");
     }
   };
+  const resetAppearance = () => void update({ displayStyle: DEFAULT_SETTINGS.displayStyle, topOffset: DEFAULT_SETTINGS.topOffset, minimalIdleMode: DEFAULT_SETTINGS.minimalIdleMode, fullscreenBehavior: DEFAULT_SETTINGS.fullscreenBehavior });
+  const resetAllSettings = () => { if (window.confirm("Reset Nutch settings? Notes and Planner data will be preserved.")) void update({ ...DEFAULT_SETTINGS, onboardingCompleted: true }); };
   return (
     <div className="settings-panel">
       <header className="panel-header">
@@ -69,6 +71,8 @@ export function SettingsPanel({ onBack, onSetup, onDiagnostics }: { onBack: () =
       {notificationMessage && <p className="settings-note">{notificationMessage}</p>}
       <button className="secondary-button" onClick={onSetup}>Run setup again</button>
       <button className="secondary-button" onClick={onDiagnostics}>About & diagnostics</button>
+      <button className="secondary-button" onClick={resetAppearance}>Reset appearance</button>
+      <button className="secondary-button" onClick={resetAllSettings}>Reset all settings</button>
       <button className="quit-button" onClick={() => void native.quit()}>Quit Nutch</button>
     </div>
   );
