@@ -6,6 +6,11 @@ All notable changes to Nutch are documented here.
 
 ### Added
 
+- Single-instance forwarding so launching Nutch twice focuses the existing window.
+- Short first-run onboarding with an upgrade-safe completion state.
+- About & Diagnostics view with non-sensitive module health checks.
+- Missed-reminder recovery after restart or sleep with persistent de-duplication.
+- User guide, troubleshooting, security policy, and GitHub issue/PR templates.
 - Safe Quick Search commands for volume, mute, Focus, Notes, Planner, Settings, and display mode.
 - Local calculator expressions and common unit conversions.
 - Persisted minimal-idle, Do Not Disturb, Presentation, and fullscreen-policy settings.

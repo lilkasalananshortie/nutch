@@ -1,0 +1,29 @@
+name: Bug report
+description: Report a reproducible Nutch problem
+title: "bug: "
+body:
+  - type: textarea
+    id: summary
+    attributes:
+      label: What happened?
+      description: Describe expected and actual behavior without private data.
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Nutch version
+      placeholder: 0.4.0
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+    validations:
+      required: true
+  - type: textarea
+    id: diagnostics
+    attributes:
+      label: Sanitized diagnostics
+      description: Do not include Notes, Planner text, clipboard contents, tokens, or API keys.

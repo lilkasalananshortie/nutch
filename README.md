@@ -18,6 +18,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences
+- First-run onboarding, single-instance protection, missed-reminder recovery, and non-sensitive diagnostics
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences
@@ -63,13 +64,19 @@ stored locally under the user's Nutch application configuration directory.
 See [docs/architecture.md](docs/architecture.md) for the communication and
 persistence boundaries.
 
+User-facing help is in [docs/user-guide.md](docs/user-guide.md) and
+[docs/troubleshooting.md](docs/troubleshooting.md). Security reporting guidance
+is in [SECURITY.md](SECURITY.md).
+
 ## Roadmap
 
-The next milestones are selected-folder app search, scheduled custom Nutch
-alerts, a general timer, clipboard history (opt-in), profiles, and an optional
-AI action provider. Windows-wide downloads, microphone/camera indicators,
-brightness control, and fullscreen detection remain deferred until reliable
-user-space APIs are available.
+Completed maturity work includes onboarding, single-instance behavior,
+settings recovery, diagnostics, and restart-safe reminders. Planned work is
+versioned backup/restore, a general timer, opt-in clipboard history, profiles,
+and an optional AI action provider. Signed updates, Windows-wide downloads,
+microphone/camera indicators, brightness control, and automatic fullscreen
+detection remain deferred until reliable user-space APIs and release keys are
+available.
 
 ## Architecture
 
