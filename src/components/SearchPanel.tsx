@@ -111,8 +111,8 @@ export function SearchPanel({ onBack, onNotes, onPlanner, onSettings, onFocus, o
     if (term === "mute" || term === "unmute" || term === "toggle mute") commandResults.push({ id: "command-mute", title: term === "unmute" ? "Unmute system audio" : term === "mute" ? "Mute system audio" : "Toggle mute", detail: "Nutch action", action: async () => { const status = await native.volume(); await native.setMuted(term === "mute" ? true : term === "unmute" ? false : !status.muted); onBack(); } });
     const focusMatch = term.match(/^focus\s+(\d{1,3})\s*(?:m|min|minutes)?$/);
     if (focusMatch) { const minutes = Math.max(1, Math.min(240, Number(focusMatch[1]))); commandResults.push({ id: "command-focus", title: `Start ${minutes}-minute Focus`, detail: "Nutch action", action: () => { start(minutes); onFocus(); } }); }
-    const timerMatch = term.match(/^timer\s+(\d{1,4})\s*(?:m|min|minutes)?$/);
-    if (timerMatch) { const minutes = Math.max(1, Math.min(1440, Number(timerMatch[1]))); commandResults.push({ id: "command-timer", title: `Start ${minutes}-minute Timer`, detail: "Nutch action", action: () => { startTimer(minutes); onTimer(); } }); }
+    const timerMatch = term.match(/^timer\s+(\d{1,4})\s*(?:m|min|minutes)?(?:\s+(.+))?$/);
+    if (timerMatch) { const minutes = Math.max(1, Math.min(1440, Number(timerMatch[1]))); const label = timerMatch[2]?.trim(); commandResults.push({ id: "command-timer", title: `Start ${minutes}-minute${label ? ` ${label}` : ""} Timer`, detail: "Nutch action", action: () => { startTimer(minutes, label); onTimer(); } }); }
     if (term === "new note" || term === "note") commandResults.push({ id: "command-note", title: "Create a new note", detail: "Nutch action", action: onNotes });
     if (term === "quick capture" || term === "capture" || term === "new") commandResults.push({ id: "command-capture", title: "Open Quick Capture", detail: "Nutch action", action: onCapture });
     if (term === "new task" || term === "task" || term === "planner") commandResults.push({ id: "command-task", title: "Open Planner", detail: "Nutch action", action: onPlanner });

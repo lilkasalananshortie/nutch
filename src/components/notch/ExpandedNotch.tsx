@@ -7,6 +7,7 @@ import { Icon } from "../ui/Icon";
 import { useSystemStats } from "../../hooks/useSystemStats";
 import { useSystemVolume } from "../../hooks/useSystemVolume";
 import { useSettings } from "../../stores/settings";
+import { useLiveActivity } from "../../stores/liveActivity";
 import type { AppSettings, BatteryStatus as Battery, MediaStatus } from "../../lib/native";
 
 interface ExpandedNotchProps {
@@ -30,10 +31,12 @@ interface ExpandedNotchProps {
 export function ExpandedNotch({ format, battery, media, mediaError, unreadCount, onSettings, onNotes, onNotifications, onPlanner, onSearch, onFocus, onTimer, onCapture, onVolumeActivity, onMediaControl }: ExpandedNotchProps) {
   const volume = useSystemVolume(true, onVolumeActivity);
   const { settings } = useSettings();
+  const { activities, current: activity, cycle, togglePinned } = useLiveActivity();
   const system = useSystemStats(settings.showSystemStats);
   return <div className="expanded-content island-layout">
     <div className="island-main">
       <header className="system-header"><Clock format={format} expanded /><BatteryStatus battery={battery} expanded /></header>
+      {activities.length > 1 && activity && <div className="activity-stack"><button onClick={cycle} aria-label="Cycle active activities"><span>{activities.length} active</span><strong>{activity.title}</strong></button><button onClick={() => togglePinned(activity.id)} aria-label={activity.pinned ? "Unpin activity" : "Pin activity"}>{activity.pinned ? "Pinned" : "Pin"}</button></div>}
       <VolumeControl status={volume.status} error={volume.error} onVolume={(value) => void volume.setVolume(value)} onMute={() => void volume.toggleMute()} dragging={volume.dragging} />
       {settings.showMedia && (media?.available || mediaError) && <MediaControl media={media} error={mediaError} onControl={onMediaControl} />}
       {settings.showSystemStats && <SystemStats stats={system.stats} error={system.error} />}

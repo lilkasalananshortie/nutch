@@ -24,6 +24,7 @@ Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for lo
 - Fuzzy local Search ranking with bounded command history
 - Global shortcuts: `Alt+Space` for Quick Search and `Alt+N` for Quick Capture
 - Manual Privacy mode masks collapsed media/activity titles; notification history is bounded
+- Context activity stack with pinning/cycling and multiple labeled persistent timers
 - Local calculator and unit conversion from Quick Search (for example `2^8` or `20 km to miles`)
 - Allowlisted command actions for volume, mute, Focus, notes, Planner, Settings, and display mode
 - Minimal idle, Do Not Disturb, Presentation, and fullscreen-policy preferences

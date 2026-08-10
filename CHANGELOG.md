@@ -14,6 +14,8 @@ All notable changes to Nutch are documented here.
 - Official Tauri global shortcuts: Alt+Space for Search and Alt+N for Quick Capture, with conflict-safe fallback.
 - Manual Privacy mode that masks collapsed media/activity titles.
 - Notification inbox retention capped at 30 days and 30 entries.
+- Context Engine 2.0 metadata, pinned activities, activity cycling, and a compact expanded activity switcher.
+- Multiple persistent labeled timers with pinning and Search labels such as `timer 5m coffee`.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.
