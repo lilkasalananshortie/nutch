@@ -22,9 +22,11 @@ implementation.
 
 ## Partial or intentionally limited
 
-- Planner remains a lightweight task/reminder list. Subtasks, recurrence,
-  calendar providers, dependencies, and ICS are not yet part of the data model.
-- Search currently covers Nutch data and allowlisted commands; Windows app/file
+- Planner remains a lightweight task/reminder list with tags, estimates, and
+  subtasks. Recurrence, calendar providers, dependencies, and ICS are not yet
+  part of the data model.
+- Search currently covers Nutch data and allowlisted commands with local
+  category filters; Windows app/file
   indexing, fuzzy app launching, clipboard sources, and web search are not
   enabled by default.
 - Fullscreen behavior is persisted as a user preference, but automatic
