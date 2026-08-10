@@ -594,6 +594,20 @@ input[type="range"]::-webkit-slider-thumb { width: 14px; height: 14px; margin-to
 .today-section { padding: 15px; }
 .today-section > span { font-size: 9px; font-weight: 600; letter-spacing: .14em; }
 .today-section > strong { font-size: 25px; font-weight: 500; }
+.planner-open { width: 100%; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; cursor: pointer; text-align: left; }
+.planner-meta { overflow: hidden; color: var(--nutch-text-muted); font-size: 9px; text-overflow: ellipsis; white-space: nowrap; }
+.planner-editor label { gap: 8px; }
+.planner-editor label input { border: 1px solid var(--nutch-border); border-radius: 8px; padding: 7px 9px; background: var(--nutch-surface-raised); }
+.planner-duration { width: 110px !important; }
+.planner-subtasks { display: grid; gap: 7px; margin-top: 10px; color: var(--nutch-text-secondary); font-size: 10px; }
+.subtask-row { display: flex; align-items: center; justify-content: flex-start !important; gap: 8px; margin: 0 !important; color: var(--nutch-text-primary) !important; }
+.subtask-row input { width: auto !important; accent-color: var(--nutch-focus); }
+.subtask-row .done { color: var(--nutch-text-muted); text-decoration: line-through; }
+.subtask-add { display: flex; gap: 6px; }
+.subtask-add input { min-width: 0; flex: 1; border: 1px solid var(--nutch-border); border-radius: 8px; padding: 7px 9px; background: var(--nutch-surface-raised); color: var(--nutch-text-primary); }
+.subtask-add button { border: 1px solid var(--nutch-border); border-radius: 8px; padding: 6px 9px; background: var(--nutch-surface-raised); color: var(--nutch-text-secondary); cursor: pointer; }
+.subtask-add button:hover:not(:disabled) { background: var(--nutch-surface-hover); color: var(--nutch-text-primary); }
+.subtask-add button:disabled { cursor: default; opacity: .45; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; transition-duration: .01ms !important; }

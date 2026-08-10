@@ -60,6 +60,15 @@ export interface PlannerItem {
   completed: boolean;
   createdAt: number;
   updatedAt: number;
+  tags?: string[];
+  durationMinutes?: number | null;
+  subtasks?: PlannerSubtask[];
+}
+
+export interface PlannerSubtask {
+  id: string;
+  title: string;
+  completed: boolean;
 }
 
 export interface AppSettings {
