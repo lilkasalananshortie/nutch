@@ -77,6 +77,9 @@ User-facing help is in [docs/user-guide.md](docs/user-guide.md) and
 [docs/troubleshooting.md](docs/troubleshooting.md). Security reporting guidance
 is in [SECURITY.md](SECURITY.md).
 
+The current boundary for the larger advanced-feature roadmap is tracked in
+[docs/advanced-feature-status.md](docs/advanced-feature-status.md).
+
 ## Roadmap
 
 Completed maturity work includes onboarding, single-instance behavior,
