@@ -29,3 +29,9 @@ src-tauri/tauri.signing.conf.json
 *.njsproj
 *.sln
 *.sw?
+
+# Local beta distribution artifacts (release notes/checksums are tracked separately)
+release/*/*
+!release/*/TESTING.md
+!release/*/RELEASE-NOTES.md
+!release/*/checksums.txt

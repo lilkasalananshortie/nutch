@@ -20,6 +20,13 @@ All notable changes to Nutch are documented here.
 - Local profile selector for Default, Work, Study, Gaming, and Presentation policies.
 - Quick Search aliases/prefix normalization and safe Privacy/DND/history actions.
 - Today now includes a local task-count briefing summary.
+
+## [0.5.0-beta] - 2026-08-11
+
+### Added
+
+- Classmate beta distribution with verified NSIS and MSI installers.
+- Tester guide, release notes, and SHA-256 checksums.
 - Planner tasks now support tags, estimated duration, and lightweight subtasks while preserving older task data.
 - Quick Search now includes local category filters for commands, notes, and tasks.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
