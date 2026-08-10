@@ -2,6 +2,8 @@
 
 Nutch is a lightweight Windows top-center Dynamic Island-inspired utility for local time, battery, real master-volume control, Windows media sessions, quick notes, alerts, and optional system widgets.
 
+Current beta: `v0.5.0` (unsigned Windows preview build)
+
 ## Current capabilities
 
 - Premium monochrome design tokens and consistent vector icon treatment
