@@ -79,6 +79,7 @@ export interface AppSettings {
   presentationMode: boolean;
   fullscreenBehavior: "show" | "minimal" | "hide";
   onboardingCompleted: boolean;
+  privacyMode: boolean;
 }
 
 export const DEFAULT_SETTINGS: AppSettings = {
@@ -98,6 +99,7 @@ export const DEFAULT_SETTINGS: AppSettings = {
   presentationMode: false,
   fullscreenBehavior: "show",
   onboardingCompleted: false,
+  privacyMode: false,
 };
 
 export const native = {

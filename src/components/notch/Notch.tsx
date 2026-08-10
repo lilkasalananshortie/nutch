@@ -152,7 +152,7 @@ export function Notch() {
   }, []);
 
   return <main className={`notch-shell ${expanded ? "expanded" : "collapsed"} view-${view} display-${settings.displayStyle} ${ready ? "ready" : ""}`} onMouseEnter={() => { cancelCollapse(); handleEnter(); }} onMouseLeave={() => { if (view === "main") collapseSoon(); }} onClick={handleClick} onWheel={onWheel} aria-label="Nutch system controls">
-    {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} />}
+    {!expanded && <CollapsedNotch format={settings.timeFormat} battery={battery} unreadCount={unreadCount} activity={activity} media={media.media} minimalIdle={settings.minimalIdleMode} privacyMode={settings.privacyMode} />}
     {expanded && view === "main" && <ExpandedNotch format={settings.timeFormat} battery={battery} media={media.media} mediaError={media.error} unreadCount={unreadCount} onVolumeActivity={onVolumeActivity} onMediaControl={(action) => void media.control(action)} onSettings={() => openView("settings")} onNotes={() => openView("notes")} onNotifications={() => openView("notifications")} onPlanner={() => openView("planner")} onSearch={() => openView("search")} onFocus={() => openView("focus")} onTimer={() => openView("timer")} onCapture={() => openView("capture")} />}
     {expanded && view === "settings" && <SettingsPanel onBack={() => setView("main")} onSetup={() => openView("onboarding")} onDiagnostics={() => openView("diagnostics")} />}
     {expanded && view === "onboarding" && <Onboarding onComplete={() => { setView("main"); setExpanded(false); }} />}

@@ -22,7 +22,8 @@ const NotificationContext = createContext<NotificationContextValue | null>(null)
 function loadStoredNotifications(): NutchNotification[] {
   try {
     const parsed = JSON.parse(localStorage.getItem(STORAGE_KEY) ?? "[]") as NutchNotification[];
-    return Array.isArray(parsed) ? parsed.slice(0, 30) : [];
+    const cutoff = Date.now() - 30 * 24 * 60 * 60_000;
+    return Array.isArray(parsed) ? parsed.filter((item) => item && typeof item.createdAt === "number" && item.createdAt >= cutoff).slice(0, 30) : [];
   } catch {
     return [];
   }

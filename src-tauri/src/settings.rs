@@ -25,6 +25,7 @@ pub struct AppSettings {
     presentation_mode: bool,
     fullscreen_behavior: String,
     onboarding_completed: bool,
+    privacy_mode: bool,
 }
 
 impl Default for AppSettings {
@@ -46,6 +47,7 @@ impl Default for AppSettings {
             presentation_mode: false,
             fullscreen_behavior: "show".into(),
             onboarding_completed: false,
+            privacy_mode: false,
         }
     }
 }
