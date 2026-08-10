@@ -26,6 +26,7 @@ pub struct AppSettings {
     fullscreen_behavior: String,
     onboarding_completed: bool,
     privacy_mode: bool,
+    profile: String,
 }
 
 impl Default for AppSettings {
@@ -48,6 +49,7 @@ impl Default for AppSettings {
             fullscreen_behavior: "show".into(),
             onboarding_completed: false,
             privacy_mode: false,
+            profile: "default".into(),
         }
     }
 }
@@ -105,6 +107,12 @@ pub fn save_settings(app: AppHandle, mut settings: AppSettings) -> Result<(), St
         "show" | "minimal" | "hide"
     ) {
         return Err("Fullscreen behavior must be show, minimal, or hide".into());
+    }
+    if !matches!(
+        settings.profile.as_str(),
+        "default" | "work" | "study" | "gaming" | "presentation"
+    ) {
+        return Err("Profile must be default, work, study, gaming, or presentation".into());
     }
     settings.top_offset = settings.top_offset.clamp(0.0, 30.0);
     let path = settings_path(&app)?;

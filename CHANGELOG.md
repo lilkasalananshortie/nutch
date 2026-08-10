@@ -17,6 +17,7 @@ All notable changes to Nutch are documented here.
 - Context Engine 2.0 metadata, pinned activities, activity cycling, and a compact expanded activity switcher.
 - Multiple persistent labeled timers with pinning and Search labels such as `timer 5m coffee`.
 - Compact Today view for current Focus, active timers, and the next Planner item.
+- Local profile selector for Default, Work, Study, Gaming, and Presentation policies.
 - Single-instance forwarding so launching Nutch twice focuses the existing window.
 - Short first-run onboarding with an upgrade-safe completion state.
 - About & Diagnostics view with non-sensitive module health checks.

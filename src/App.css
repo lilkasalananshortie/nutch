@@ -428,3 +428,4 @@ input[type="range"]:disabled { cursor: default; opacity: .45; }
 .today-section > small, .today-row small, .today-next small { color: var(--nutch-text-secondary); font-size: 12px; }
 .today-row, .today-next { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-width: 0; }
 .today-row strong, .today-next strong { overflow: hidden; color: var(--nutch-text-primary); font-size: 14px; font-weight: 500; text-overflow: ellipsis; white-space: nowrap; }
+.profile-segmented { flex-wrap: wrap; justify-content: flex-end; max-width: 220px; }
